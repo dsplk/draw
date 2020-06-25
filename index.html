@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>画板</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="canvas" ></canvas>
+</body>
+
+<script>
+    let canvas = document.getElementById("canvas");
+    let ctx = canvas.getContext("2d");
+
+    canvas.width = document.documentElement.clientWidth;
+    canvas.height = document.documentElement.clientHeight;
+
+    let painting = false;
+    let last;
+
+    var isTouchDevive = 'ontouchstart' in document.documentElement;
+    if(isTouchDevive){
+        canvas.ontouchstart = (e)=>{
+            let x = e.touches[0].clientX;
+            let y = e.touches[0].clientY;
+
+            last = [x,y];
+        }
+        canvas.ontouchmove = (e) =>{
+            let x = e.touches[0].clientX;
+            let y = e.touches[0].clientY;
+
+            drawLine(last[0],last[1],x,y)
+
+            last =[x,y];
+        }
+
+    }else{
+        canvas.onmousedown = (e) =>{
+        painting = true;
+
+        let x = e.clientX[0];
+        let y = e.clientY[0];
+
+        last = [x,y];
+        
+    }
+
+    canvas.onmousemove = (e) =>{
+        if(painting === true){
+       
+        let x = e.clientX;
+        let y = e.clientY;
+
+        drawLine(last[0],last[1],x,y)
+        last =[x,y];
+        }else{
+            console(0);
+        }
+    }
+
+    canvas.onmouseup = () =>{
+        painting = false;
+    }
+    }
+
+    function drawLine(x1,y1,x2,y2){
+        ctx.beginPath();
+        ctx.moveTo(x1,y1);
+        ctx.lineTo(x2,y2);
+        ctx.stroke();
+
+        ctx.lineWidth = 30;
+        ctx.lineCap = "round";
+    }
+
+   
+</script>
+</html>
